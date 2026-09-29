@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Participation Tracker</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📚 Student Participation Tracker</h1>
+        </header>
+
+        <!-- Screen 1: Input Names -->
+        <div id="inputScreen" class="screen active">
+            <div class="card">
+                <h2>Add Students</h2>
+                <p class="subtitle">Enter student names to track participation</p>
+                
+                <div class="input-group">
+                    <input 
+                        type="text" 
+                        id="studentNameInput" 
+                        placeholder="Enter student name"
+                        autocomplete="off"
+                    >
+                    <button id="addStudentBtn" class="btn btn-primary">Add Student</button>
+                </div>
+
+                <div id="studentList" class="student-list"></div>
+
+                <button id="startTrackingBtn" class="btn btn-success btn-large" disabled>
+                    Start Tracking
+                </button>
+            </div>
+        </div>
+
+        <!-- Screen 2: Track Participation -->
+        <div id="trackingScreen" class="screen">
+            <div class="controls">
+                <button id="backBtn" class="btn btn-secondary">← Back to Setup</button>
+                <button id="resetPointsBtn" class="btn btn-warning">Reset All Points</button>
+                <button id="emailSummaryBtn" class="btn btn-primary">📧 Email Summary</button>
+            </div>
+
+            <div id="participationGrid" class="participation-grid"></div>
+
+            <div class="summary-section">
+                <h3>Quick Summary</h3>
+                <div id="summaryDisplay"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
