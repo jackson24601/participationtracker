@@ -1,6 +1,7 @@
 class ParticipationTracker {
     constructor() {
         this.students = [];
+        this.savedClassListsData = {};
         this.currentScreen = 'input';
         this.initializeElements();
         this.attachEventListeners();
@@ -19,6 +20,9 @@ class ParticipationTracker {
         this.resetPointsBtn = document.getElementById('resetPointsBtn');
         this.emailSummaryBtn = document.getElementById('emailSummaryBtn');
         this.summaryDisplay = document.getElementById('summaryDisplay');
+        this.classListNameInput = document.getElementById('classListNameInput');
+        this.saveClassListBtn = document.getElementById('saveClassListBtn');
+        this.savedClassListsElement = document.getElementById('savedClassLists');
     }
 
     attachEventListeners() {
@@ -30,6 +34,11 @@ class ParticipationTracker {
         this.backBtn.addEventListener('click', () => this.showInputScreen());
         this.resetPointsBtn.addEventListener('click', () => this.resetPoints());
         this.emailSummaryBtn.addEventListener('click', () => this.emailSummary());
+        this.saveClassListBtn.addEventListener('click', () => this.saveClassList());
+        this.classListNameInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') this.saveClassList();
+        });
+        this.classListNameInput.addEventListener('input', () => this.updateSaveClassListButton());
     }
 
     addStudent() {
@@ -74,6 +83,7 @@ class ParticipationTracker {
             `).join('');
             this.startTrackingBtn.disabled = false;
         }
+        this.updateSaveClassListButton();
     }
 
     showTrackingScreen() {
@@ -171,8 +181,101 @@ class ParticipationTracker {
         window.location.href = mailtoLink;
     }
 
+    updateSaveClassListButton() {
+        const hasStudents = this.students.length > 0;
+        const hasClassName = this.classListNameInput.value.trim().length > 0;
+        this.saveClassListBtn.disabled = !(hasStudents && hasClassName);
+    }
+
+    saveClassList() {
+        const className = this.classListNameInput.value.trim();
+        if (!className || this.students.length === 0) return;
+
+        const studentNames = this.students.map(s => s.name);
+        this.savedClassListsData[className] = {
+            name: className,
+            students: studentNames,
+            savedDate: new Date().toISOString(),
+            studentCount: studentNames.length
+        };
+
+        this.saveClassListsToLocalStorage();
+        this.renderSavedClassLists();
+        this.classListNameInput.value = '';
+        this.updateSaveClassListButton();
+
+        alert(`Class list "${className}" saved successfully!`);
+    }
+
+    loadClassList(className) {
+        const classList = this.savedClassListsData[className];
+        if (!classList) return;
+
+        if (this.students.length > 0) {
+            if (!confirm(`This will replace your current student list. Continue?`)) {
+                return;
+            }
+        }
+
+        this.students = classList.students.map(name => ({
+            name: name,
+            points: 0,
+            id: Date.now() + Math.random()
+        }));
+
+        this.renderStudentList();
+        this.saveToLocalStorage();
+        
+        alert(`Loaded "${className}" with ${classList.studentCount} students`);
+    }
+
+    deleteClassList(className) {
+        if (!confirm(`Delete class list "${className}"? This cannot be undone.`)) {
+            return;
+        }
+
+        delete this.savedClassListsData[className];
+        this.saveClassListsToLocalStorage();
+        this.renderSavedClassLists();
+    }
+
+    renderSavedClassLists() {
+        const classListArray = Object.values(this.savedClassListsData);
+        
+        if (classListArray.length === 0) {
+            this.savedClassListsElement.innerHTML = '<div class="empty-state">No saved class lists yet</div>';
+            return;
+        }
+
+        this.savedClassListsElement.innerHTML = classListArray
+            .sort((a, b) => new Date(b.savedDate) - new Date(a.savedDate))
+            .map(classList => {
+                const savedDate = new Date(classList.savedDate).toLocaleDateString();
+                return `
+                    <div class="saved-class-item">
+                        <div class="saved-class-info">
+                            <div class="saved-class-name">${this.escapeHtml(classList.name)}</div>
+                            <div class="saved-class-meta">${classList.studentCount} students • Saved ${savedDate}</div>
+                        </div>
+                        <div class="saved-class-actions">
+                            <button class="btn btn-load" onclick="tracker.loadClassList('${this.escapeHtml(classList.name)}')">
+                                Load
+                            </button>
+                            <button class="btn btn-delete" onclick="tracker.deleteClassList('${this.escapeHtml(classList.name)}')">
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+    }
+
     saveToLocalStorage() {
         localStorage.setItem('participationTracker', JSON.stringify(this.students));
+    }
+
+    saveClassListsToLocalStorage() {
+        localStorage.setItem('savedClassLists', JSON.stringify(this.savedClassListsData));
     }
 
     loadFromLocalStorage() {
@@ -183,6 +286,16 @@ class ParticipationTracker {
                 this.renderStudentList();
             } catch (e) {
                 console.error('Failed to load saved data:', e);
+            }
+        }
+
+        const savedLists = localStorage.getItem('savedClassLists');
+        if (savedLists) {
+            try {
+                this.savedClassListsData = JSON.parse(savedLists);
+                this.renderSavedClassLists();
+            } catch (e) {
+                console.error('Failed to load saved class lists:', e);
             }
         }
     }

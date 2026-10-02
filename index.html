@@ -30,6 +30,24 @@
 
                 <div id="studentList" class="student-list"></div>
 
+                <div class="class-list-section">
+                    <h3>Save Current Class List</h3>
+                    <div class="input-group">
+                        <input 
+                            type="text" 
+                            id="classListNameInput" 
+                            placeholder="Enter class name (e.g., Period 1, Math 101)"
+                            autocomplete="off"
+                        >
+                        <button id="saveClassListBtn" class="btn btn-primary" disabled>💾 Save</button>
+                    </div>
+                </div>
+
+                <div class="saved-lists-section">
+                    <h3>Saved Class Lists</h3>
+                    <div id="savedClassLists" class="saved-class-lists"></div>
+                </div>
+
                 <button id="startTrackingBtn" class="btn btn-success btn-large" disabled>
                     Start Tracking
                 </button>
