@@ -12,6 +12,7 @@ A simple, beautiful web-based application for tracking student participation in 
 ### Key Capabilities
 
 - ✅ **Easy Student Management** - Quickly add or remove students
+- ✅ **Save Class Lists** - Save and reuse class rosters for different periods/groups
 - ✅ **One-Click Point Tracking** - Simply click a student's card to add a point
 - ✅ **Visual Feedback** - Smooth animations provide instant feedback
 - ✅ **Real-Time Summary** - See participation rankings at a glance
@@ -55,6 +56,23 @@ Then open http://localhost:8000 in your browser.
 2. Press Enter or click "Add Student"
 3. Repeat for all students in your class
 4. Click "Start Tracking" when ready
+
+### Saving & Loading Class Lists
+
+**Save a Class List:**
+1. After adding students, enter a class name (e.g., "Period 1", "Math 101", "Morning Class")
+2. Click "💾 Save" to save the current student roster
+3. The saved list will appear in the "Saved Class Lists" section
+
+**Load a Saved Class List:**
+1. Click "Load" next to any saved class list
+2. The students from that list will be loaded (with confirmation if you have students currently listed)
+3. All students start with 0 points
+
+**Manage Saved Lists:**
+- View all your saved class lists with student counts and save dates
+- Delete any saved list by clicking "Delete" (with confirmation)
+- Save multiple class lists for different periods, subjects, or groups
 
 ### Tracking Participation
 
@@ -134,6 +152,14 @@ Feel free to customize the application by editing:
 
 This project is open source and available for educational use.
 
+## 🎯 Use Cases
+
+- **Multiple Class Periods**: Save separate rosters for Period 1, Period 2, etc.
+- **Different Subjects**: Maintain lists for Math, English, Science classes
+- **Group Activities**: Create lists for different project groups or teams
+- **Substitute Teachers**: Quickly load the class roster and start tracking
+- **Special Events**: Save rosters for clubs, study groups, or after-school activities
+
 ## 🤝 Contributing
 
 Suggestions and improvements are welcome! Some ideas for future enhancements:
@@ -144,6 +170,7 @@ Suggestions and improvements are welcome! Some ideas for future enhancements:
 - Session history
 - Class roster import
 - Participation trends over time
+- Edit saved class lists
 
 ---
 
